@@ -6,7 +6,7 @@
             <div class="input flex flex-col justify-between sm:flex-row items-center gap-5 text-black">
                        <ActionB :team="this.team" @takeV="manageSwitcher" /> 
         </div>
-        <div class="flex sm:flex-wrap justify-center h-full card">
+        <div class="flex flex-wrap justify-center h-full card">
             <Cards :SH="this.SHvalue" @setTeam="setusers"/>
         </div>
       </div>

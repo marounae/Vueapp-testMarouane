@@ -1,8 +1,8 @@
   <template>
       <!-- card 1 -->
-      <div class="flex-1  w-auto m-2" v-if="delAction['card1']">
+      <div class="flex-1 sm:w-1/4 md:w-1/2 m-2" v-if="delAction['card1']">
         <!-- card title -->
-        <div class="flex   justify-between m-4 mb-4">
+        <div class="flex h   justify-between m-4 mb-4">
           <div class="flex   w-16">
             <img src="../assets/Icon.svg" alt="" class="z-0" /><input  value="To do" ref="change" :disabled="enabel ? disabled : ''"/>      
           </div>
@@ -27,6 +27,9 @@
               @drop="updatedroped($event,'To do')"
               @dragenter.prevent
               @dragover.prevent
+              @touchstart.prevent
+              @touchend.prevent
+              @touchmove.prevent
               class="rounded-2xl bg-gray-50  shadow-md text-center ring-1 ring-inset ring-gray-900/5 h-96 mb-3  scrollign">
                   <div class="mx-auto max-w-xs p-3">
                       <div v-if="this.SH"  class=" bg-stone-100 rounded-lg  px-1 py-1 flex flex-col justify-around shadow-md">
@@ -109,7 +112,7 @@
     </div>
     
       <!-- card 2 -->
-      <div class="flex-1  w-auto m-2" v-if="delAction['card2']">
+      <div class="flex-1  sm:w-1/4 md:w-1/3  w-auto m-2" v-if="delAction['card2']">
         <!-- card title -->
           <div class="flex   justify-between m-4 mb-4">
           <div class="flex   w-16">
@@ -136,7 +139,7 @@
             @drop="updatedroped($event,'In Progress')"
             @dragenter.prevent
             @dragover.prevent
-            class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-3/4 scrollign">
+            class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5   h-96 scrollign">
              <div class="mx-auto max-w-xs px-2">
 
 
@@ -197,7 +200,7 @@
         </div>
       </div>
       <!-- card 3 -->
-      <div class="flex-1  w-auto m-2" v-if="delAction['card3']">
+      <div class="flex-1  sm:w-1/4 md:w-1/3  w-auto m-2" v-if="delAction['card3']">
         <!-- card title -->
         <div class="flex   justify-between m-4 mb-4">
           <div class="flex   w-16">
@@ -222,7 +225,7 @@
         @drop="updatedroped($event,'Review')"
         @dragenter.prevent
         @dragover.prevent
-        class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-3/4  scrollign">
+        class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-96  scrollign">
          <div class="mx-auto max-w-xs px-2">
 
 
@@ -283,7 +286,7 @@
         </div>
       </div>
       <!-- card 4 -->
-      <div class="flex-1  w-auto m-2" v-if="delAction['card4']">
+      <div class="flex-1  sm:w-1/4 md:w-1/3  w-auto m-2" v-if="delAction['card4']">
         <!-- card title -->
         <div class="flex   justify-between m-4 mb-4">
           <div class="flex   w-16">
@@ -308,7 +311,7 @@
         @drop="updatedroped($event,'Completed')"
         @dragenter.prevent
         @dragover.prevent
-        class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-3/4 scrollign">
+        class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-96  scrollign">
          <div class="mx-auto max-w-xs px-2">
 
 
@@ -489,7 +492,8 @@
       // console.log(this.task)
 
 
-    }
+    },
+    
 
     },
     computed:{
@@ -651,9 +655,11 @@
             .scrollign::-webkit-scrollbar {
               display: none;
           }
+          
           .scrollign{
             overflow-y: auto;
           }
+        
           
           
 

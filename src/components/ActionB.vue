@@ -2,7 +2,7 @@
       
             <!-- field button one -->
             <div class="flex gap-6">
-              <button href="#" :class="{bb : ActiveAdd}"  class="rounded-md shadow-lg font-medium border-solid border border-white px-3.5 py-2.5 text-sm text-black  hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-bg b "
+              <button href="#" :class="{bb : ActiveAdd}"  class="rounded-md shadow-lg  font-medium border-solid border border-white px-3.5 py-2.5 text-sm text-black  hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-bg b "
               @click="Switcher">
                 <span aria-hidden="true">+</span> Add Task
               </button>
@@ -115,7 +115,7 @@ export default {
 
 <style>
 .b {
-	width: 120px;
+	width: 133px;
 	height: 42px;
 	padding: 12px 26px 12px 24px;
 	border-radius: 10px;
