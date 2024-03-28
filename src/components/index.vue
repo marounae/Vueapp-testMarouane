@@ -1,12 +1,17 @@
 <template>
-  <Navbar />
-  <div class="m-10 mt-2">
-     <ActionB @takeV="manageSwitcher"/> 
-  </div>
-  <div class="flex sm:flex-wrap justify-center h-screen ">
-     <Cards :SH="this.SHvalue"/>
-  </div>
-  
+
+<div :class="dark">
+      <Navbar @dark="darkmode" />
+      <div class="m-10 mt-2">
+            <div class="flex flex-col justify-between sm:flex-row items-center gap-5 text-black">
+                       <ActionB :team="this.team" @takeV="manageSwitcher" /> 
+        </div>
+        <div class="flex sm:flex-wrap justify-center h-screen ">
+            <Cards :SH="this.SHvalue" @setTeam="setusers"/>
+        </div>
+      </div>
+        
+</div>
   
 </template>
 
@@ -18,6 +23,8 @@ export default {
       name:"Index",
       data(){
             return{
+                  dark:'',
+                  team:[],
                   SHvalue : null,
             }
       },
@@ -31,6 +38,13 @@ export default {
             // SH = show hide parameter
             manageSwitcher(SH){
                   this.SHvalue = SH
+            },
+            setusers(uti){
+                  this.team = uti
+                  
+            },
+            darkmode(val){
+                  this.dark = val
             }
       }
 
@@ -38,5 +52,7 @@ export default {
 </script>
 
 <style>
-
+.darkmode{
+background: gray;
+}
 </style>
