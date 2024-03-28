@@ -23,14 +23,18 @@
         </div>   
         <form @submit.prevent="addtask">
             <!-- fin type  card -->
-            <div class="rounded-2xl bg-gray-50  text-center ring-1 ring-inset ring-gray-900/5  h-96  scrollign">
-                <div class="mx-auto max-w-xs p-3">
-                    <div v-if="this.SH"  class="bg-white rounded-lg  px-1 py-1 flex flex-col justify-around shadow-md">
+            <div   
+              @drop="updatedroped($event,'To do')"
+              @dragenter.prevent
+              @dragover.prevent
+              class="rounded-2xl bg-gray-50  shadow-md text-center ring-1 ring-inset ring-gray-900/5 h-96 mb-3  scrollign">
+                  <div class="mx-auto max-w-xs p-3">
+                      <div v-if="this.SH"  class=" bg-stone-100 rounded-lg  px-1 py-1 flex flex-col justify-around shadow-md">
                         <div class="flex flex-row  content-center gap-1 rounded-md py-1 px-1">
                             <!-- checkbox for the task if it's finish or not (I used the style tags) -->
                             <div class="place-content-center">
                                 <label class="containe">
-                                    <input type="checkbox" v-model="checkdone">
+                                    <input type="checkbox" v-model="checkdone" disabled>
                                     <div class="checkmark"></div>
                                 </label>
                             </div>
@@ -48,36 +52,42 @@
                         </div>
                     </div>
                     <!-- show content -->
-                    <div v-for="(task,index) in Showing" :key="index" class="max-w-md mx-auto mt-4 bg-white rounded-lg px-1 py-1 flex flex-col justify-around shadow-md">
+                    <div v-for="(task,index) in Showing('To do')"           draggable="true" 
+                                 @dragstart="dropedval($event,task)"
+
+ 
+                                      :key="index" class="max-w-md mx-auto mt-4 bg-stone-200 rounded-xl px-1 py-1 flex flex-col justify-around shadow-2xl ">
                         <div class="flex flex-row justify-start gap-1 rounded-md py-1 px-1">
                             <!-- content -->
                             <div class="mt-1">
                                 <label class="containe">
-                                    <input type="checkbox" :checked="task.done">
+                                    <input type="checkbox" :checked="task.done" disabled>
                                     <div class="checkmark"></div>
                                 </label>
                             </div> 
                             <form @submit.prevent="updatedes(index)">
                             <div class="ml-2 text-left">
-                                <h1 class="bg-inherit focus:outline-none pl-1 font-bold text-xl  border-opacity-0">{{task.nameTask}}</h1>
+                                <h1 class="bg-inherit focus:outline-none pl-1 font-bold text-2xl text-gray-800 border-opacity-0">{{task.nameTask}}</h1>
                                 
                       
-                                <div class="flex"><p class="font-medium">dicription {{index}}<button type="button" v-on:click="updateAccepted"><img src="../assets/edit.png" class="w-4 h-4"></button> </p>
+                                <div class="flex"><p class="font-medium text-base  mt-1">dicription<button type="button" v-on:click="updateAccepted"><img src="../assets/edit.png" class="w-3 h-3 ml-2"></button> </p>
                                 </div>
                                 <textarea class="text-xs w-52  text-justify" v-model="des[index]"  :disabled="up ? disabled: ' '"  ref="inputElement" ></textarea>
                                 <button type="submit" v-if="up">✔️</button>
 
-                                <div class="relative selector" >
-                                  <button @click="toggleDropdownO(task.nameTask)" type="button"   class="bg-black  text-white px-2 py-1 m-2 rounded-lg shadow-md focus:outline-none Low" >
-                                    {{ selectedOption[task.nameTask] || 'Medium' }}
-                                  </button>
-                                     <ul v-if=selectO[task.nameTask] class="w-44 h-32 rounded-lg shadow-lg  absolute top-0 left-0 mt-10 bg-white border  border-gray-200   ">
-                                          <li  v-for="(option, index) in options" :key="index" @click="selectOption(option,task.nameTask,index)"  class="flex   place-content-center py-2 px-4 cursor-pointer hover:bg-gray-100 option"><p :style="{background : option.color}" class="shadow-lg rounded-lg   w-16  h-7  ">{{ option.name }}</p></li>
-                                    </ul>
-                                 
-                                </div>
+                           <div class="relative selector">
+                              <button @click="toggleDropdownO(task.nameTask)" type="button" class="bg-orange-300 text-sm px-2 py-1 m-2 rounded-xl shadow-xl focus:outline-none Low">
+                                  {{ selectedOption[task.nameTask] || 'Medium' }}
+                              </button>
+                              <ul v-if="selectO[task.nameTask]" class="w-44 h-32 rounded-xl shadow-3xl absolute top-0 left-0 mt-10 bg-gray-50 border border-gray-200">
+                                  <li v-for="(option, index) in options" :key="index" @click="selectOption(option, task.nameTask, index)" class="flex py-2 px-4 cursor-pointer option" :class="{ 'hover:visible': selectO[task.nameTask] }">
+                                      <span v-if="selectO[task.nameTask]" class="invisible mr-2">✔️</span>
+                                      <p :style="{ background: option.color }" class="shadow-lg rounded-lg items-start rounded-xl px-3 align-middle shadow-xl text-sm h-6">{{ option.name }}</p>
+                                  </li>
+                              </ul>
+                          </div>
                    
-                                <div class="flex flex-row items-center">
+                                <div class="flex flex-row items-center mt-2">
                                     <div class="w-8 h-8" :class="task.user"></div>
                                     <p class="mx-2">-</p>
                                     <p class="mx-2 max-w-xs">{{ task.date }}</p>
@@ -87,7 +97,9 @@
                           
                         </div>
                         
-                    </div>  
+                    </div> 
+                    
+                    
                 </div>
             </div>
             <div class="flex flex-col justify-center">
@@ -117,9 +129,67 @@
               </div>
             </div>
           </div>
-        </div>    
-          <div class="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset  ring-gray-900/5  h-3/4">
-            <div class="mx-auto max-w-xs px-8">
+        </div>   
+
+         <!-- title finish  -->
+          <div 
+            @drop="updatedroped($event,'In Progress')"
+            @dragenter.prevent
+            @dragover.prevent
+            class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-3/4 scrollign">
+             <div class="mx-auto max-w-xs px-2">
+
+
+              <!-- show content -->
+
+               <div v-for="(task,index) in Showing('In Progress')"           draggable="true" 
+                                 @dragstart="dropedval($event,task)"
+ 
+                                      :key="index" class="max-w-md mx-auto mt-3 bg-stone-200 rounded-xl px-1 py-1 flex flex-col justify-around shadow-xl">
+                        <div class="flex flex-row justify-start gap-1 rounded-md py-1 px-1">
+                            <!-- content -->
+                            <div class="mt-1">
+                                <label class="containe">
+                                    <input type="checkbox" :checked="task.done" disabled>
+                                    <div class="checkmark"></div>
+                                </label>
+                            </div> 
+                            <form @submit.prevent="updatedes(index)">
+                            <div class="ml-2 text-left">
+                                <h1 class="bg-inherit focus:outline-none pl-1 font-bold text-2xl text-gray-800 border-opacity-0">{{task.nameTask}}</h1>
+                                
+                      
+                                <div class="flex"><p class="font-medium text-base  mt-1">dicription<button type="button" v-on:click="updateAccepted"><img src="../assets/edit.png" class="w-3 h-3 ml-2"></button> </p>
+                                </div>
+                                <textarea class="text-xs w-52  text-justify" v-model="des[index]"  :disabled="up ? disabled: ' '"  ref="inputElement" ></textarea>
+                                <button type="submit" v-if="up">✔️</button>
+
+                           <div class="relative selector">
+                              <button @click="toggleDropdownO(task.nameTask)" type="button" class="bg-orange-300 text-sm px-2 py-1 m-2 rounded-xl shadow-xl focus:outline-none Low">
+                                  {{ selectedOption[task.nameTask] || 'Medium' }}
+                              </button>
+                              <ul v-if="selectO[task.nameTask]" class="w-44 h-32 rounded-xl shadow-3xl absolute top-0 left-0 mt-10 bg-gray-50 border border-gray-200">
+                                  <li v-for="(option, index) in options" :key="index" @click="selectOption(option, task.nameTask, index)" class="flex py-2 px-4 cursor-pointer option" :class="{ 'hover:visible': selectO[task.nameTask] }">
+                                      <span v-if="selectO[task.nameTask]" class="invisible mr-2">✔️</span>
+                                      <p :style="{ background: option.color }" class="shadow-lg rounded-lg items-start rounded-xl px-3 align-middle shadow-xl text-sm h-6">{{ option.name }}</p>
+                                  </li>
+                              </ul>
+                          </div>
+                   
+                                <div class="flex flex-row items-center mt-2">
+                                    <div class="w-8 h-8" :class="task.user"></div>
+                                    <p class="mx-2">-</p>
+                                    <p class="mx-2 max-w-xs">{{ task.date }}</p>
+                                </div>
+                            </div>
+                          </form>
+                          
+                        </div>
+                        
+                    </div> 
+
+              <!-- end show -->
+
               </div>
           </div>
           <div class="flex flex-col justify-center">
@@ -148,10 +218,66 @@
             </div>
           </div>
         </div>    
-          <div class="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 h-3/4">
-            <div class="mx-auto max-w-xs px-8">
-            </div>
+        <div 
+        @drop="updatedroped($event,'Review')"
+        @dragenter.prevent
+        @dragover.prevent
+        class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-3/4  scrollign">
+         <div class="mx-auto max-w-xs px-2">
+
+
+          <!-- show content -->
+
+           <div v-for="(task,index) in Showing('Review')"           draggable="true" 
+                             @dragstart="dropedval($event,task)"
+
+                                  :key="index" class="max-w-md mx-auto mt-3 bg-stone-200 rounded-xl px-1 py-1 flex flex-col justify-around shadow-xl">
+                    <div class="flex flex-row justify-start gap-1 rounded-md py-1 px-1">
+                        <!-- content -->
+                        <div class="mt-1">
+                            <label class="containe">
+                                <input type="checkbox" :checked="task.done" disabled>
+                                <div class="checkmark"></div>
+                            </label>
+                        </div> 
+                        <form @submit.prevent="updatedes(index)">
+                        <div class="ml-2 text-left">
+                            <h1 class="bg-inherit focus:outline-none pl-1 font-bold text-2xl text-gray-800 border-opacity-0">{{task.nameTask}}</h1>
+                            
+                  
+                            <div class="flex"><p class="font-medium text-base  mt-1">dicription<button type="button" v-on:click="updateAccepted"><img src="../assets/edit.png" class="w-3 h-3 ml-2"></button> </p>
+                            </div>
+                            <textarea class="text-xs w-52  text-justify" v-model="des[index]"  :disabled="up ? disabled: ' '"  ref="inputElement" ></textarea>
+                            <button type="submit" v-if="up">✔️</button>
+
+                       <div class="relative selector">
+                          <button @click="toggleDropdownO(task.nameTask)" type="button" class="bg-orange-300 text-sm px-2 py-1 m-2 rounded-xl shadow-xl focus:outline-none Low">
+                              {{ selectedOption[task.nameTask] || 'Medium' }}
+                          </button>
+                          <ul v-if="selectO[task.nameTask]" class="w-44 h-32 rounded-xl shadow-3xl absolute top-0 left-0 mt-10 bg-gray-50 border border-gray-200">
+                              <li v-for="(option, index) in options" :key="index" @click="selectOption(option, task.nameTask, index)" class="flex py-2 px-4 cursor-pointer option" :class="{ 'hover:visible': selectO[task.nameTask] }">
+                                  <span v-if="selectO[task.nameTask]" class="invisible mr-2">✔️</span>
+                                  <p :style="{ background: option.color }" class="shadow-lg rounded-lg items-start rounded-xl px-3 align-middle shadow-xl text-sm h-6">{{ option.name }}</p>
+                              </li>
+                          </ul>
+                      </div>
+               
+                            <div class="flex flex-row items-center mt-2">
+                                <div class="w-8 h-8" :class="task.user"></div>
+                                <p class="mx-2">-</p>
+                                <p class="mx-2 max-w-xs">{{ task.date }}</p>
+                            </div>
+                        </div>
+                      </form>
+                      
+                    </div>
+                    
+                </div> 
+
+          <!-- end show -->
+
           </div>
+      </div>
           <div class="flex flex-col justify-center">
             <button type="submit">➕ Add task</button>
         </div>
@@ -178,13 +304,70 @@
             </div>
           </div>
         </div>    
-          <div class="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 h-3/4">
-            <div class="mx-auto max-w-xs px-8">
-            </div>
+        <div 
+        @drop="updatedroped($event,'Completed')"
+        @dragenter.prevent
+        @dragover.prevent
+        class="rounded-2xl shadow-md bg-gray-50 py-1 text-center ring-1 ring-inset  ring-gray-900/5  h-3/4 scrollign">
+         <div class="mx-auto max-w-xs px-2">
+
+
+          <!-- show content -->
+
+           <div v-for="(task,index) in Showing('Completed')"           draggable="true" 
+                             @dragstart="dropedval($event,task)"
+
+                                  :key="index" class="max-w-md mx-auto mt-3 bg-stone-200 rounded-xl px-1 py-1 flex flex-col justify-around shadow-xl">
+                    <div class="flex flex-row justify-start gap-1 rounded-md py-1 px-1">
+                        <!-- content -->
+                        <div class="mt-1">
+                            <label class="containe">
+                                <input type="checkbox" :checked="task.done" >
+                                <div class="checkmark"></div>
+                            </label>
+                        </div> 
+                        <form @submit.prevent="updatedes(index)">
+                        <div class="ml-2 text-left">
+                            <h1 class="bg-inherit focus:outline-none pl-1 font-bold text-2xl text-gray-800 border-opacity-0">{{task.nameTask}}</h1>
+                            
+                  
+                            <div class="flex"><p class="font-medium text-base  mt-1">dicription<button type="button" v-on:click="updateAccepted"><img src="../assets/edit.png" class="w-3 h-3 ml-2"></button> </p>
+                            </div>
+                            <textarea class="text-xs w-52  text-justify" v-model="des[index]"  :disabled="up ? disabled: ' '"  ref="inputElement" ></textarea>
+                            <button type="submit" v-if="up">✔️</button>
+
+                       <div class="relative selector">
+                          <button @click="toggleDropdownO(task.nameTask)" type="button" class="bg-orange-300 text-sm px-2 py-1 m-2 rounded-xl shadow-xl focus:outline-none Low">
+                              {{ selectedOption[task.nameTask] || 'Medium' }}
+                          </button>
+                          <ul v-if="selectO[task.nameTask]" class="w-44 h-32 rounded-xl shadow-3xl absolute top-0 left-0 mt-10 bg-gray-50 border border-gray-200">
+                              <li v-for="(option, index) in options" :key="index" @click="selectOption(option, task.nameTask, index)" class="flex py-2 px-4 cursor-pointer option" :class="{ 'hover:visible': selectO[task.nameTask] }">
+                                  <span v-if="selectO[task.nameTask]" class="invisible mr-2">✔️</span>
+                                  <p :style="{ background: option.color }" class="shadow-lg rounded-lg items-start rounded-xl px-3 align-middle shadow-xl text-sm h-6">{{ option.name }}</p>
+                              </li>
+                          </ul>
+                      </div>
+               
+                            <div class="flex flex-row items-center mt-2">
+                                <div class="w-8 h-8" :class="task.user"></div>
+                                <p class="mx-2">-</p>
+                                <p class="mx-2 max-w-xs">{{ task.date }}</p>
+                            </div>
+                        </div>
+                      </form>
+                      
+                    </div>
+                    
+                </div> 
+
+          <!-- end show -->
+
+          </div>
+      </div>
             <div class="flex flex-col justify-center">
               <button type="submit">➕ Add task</button>
           </div>  
-          </div>
+         
           
       </div>
 
@@ -207,6 +390,7 @@
         'card2':false,'card3':false,'card4':false},
         enabel:false,
         des:[],
+        fil:[],
         up:false,
           uti:[],
           checkdone:null,
@@ -253,6 +437,8 @@
           this.delAction[i] = !this.delAction[i];
         },
       addtask(){
+        this.des.push('good work using AI');
+
         this.$store.commit('Addtask',this.addobj)
         this.obj2 = this.users.find(item => item.nameU === this.user)
         if(!this.uti.includes(this.obj)){
@@ -281,17 +467,36 @@
       },
        saveName(){
           this.enabel = false
-        }
+        },
+        Showing(pos){
+         return this.$store.state.filterUser.filter(item => item.position == pos)
+        
+    },
+     dropedval(e,item){
+      console.log(item)
+      e.dataTransfer.dropEffect =   'move'
+      e.dataTransfer.EffectAllowed = 'move'
+      e.dataTransfer.setData('taskN',item.nameTask)
+    },
+    updatedroped(e,list){
+      const taskN = e.dataTransfer.getData('taskN')
+      this.$store.commit('updatePos',{N:taskN,Pos:list})
+      // const task  = this.task.find((t)=> t.id == taskID)
+      // console.log(taskID)
+      // console.log(task)
+      // task.etape = list
+      // console.log(task)
+      // console.log(this.task)
+
+
+    }
 
     },
     computed:{
-      Showing(){
-      return this.$store.state.filterUser
-    },
+      
 
     addobj(){
-        this.des = this.Showing.map(task => 'Try the AI text Generator,A Tool For Content Creation.It Leverage A');
-console.log(this.$store.state)
+
 
       return  {nameTask:this.taskname,
               description:'Try the AI text Generator,A Tool For Content Creation.It Leverage A',
@@ -299,7 +504,7 @@ console.log(this.$store.state)
               date:this.daten,
               position:'To do',
               done:this.checkdone,
-              hard:'',
+              hard:'Medium',
               }
     }
     
@@ -438,6 +643,7 @@ console.log(this.$store.state)
             }
             input.C{
               width: 40px;
+              background: none;
             }
             input:focus{
               outline: none;
@@ -448,6 +654,7 @@ console.log(this.$store.state)
           .scrollign{
             overflow-y: auto;
           }
+          
           
 
   </style>

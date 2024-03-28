@@ -1,5 +1,5 @@
 <template>
-      <nav class="flex  gap-3 text-black py-6 top-0 bg-white shadow-lg">
+      <nav  class="flex  gap-3 text-black py-6 top-0 mb-4 shadow-lg" :class="{dark: checking}">
             <!-- logo -->
             <div class="flex place-items-center gap-6">
                   <i><img src="../assets/logo.svg" alt="" class="logo"></i>
@@ -65,6 +65,9 @@ watch:{
 }
 nav{
       padding: 5px 34px ;
+}
+.dark{
+      background-color: #9290c317;
 }
 
 

@@ -37,7 +37,6 @@ mutations:{
                               const updateTask2 = state.task.filter(elm => payload.includes(elm.hard))
                               console.log(updateTask2)
                               state.filterUser = updateTask2
-
             }
 
        },
@@ -88,9 +87,49 @@ mutations:{
                 
             })
             console.log(harder)
+           state.filterUser = harder
            state.task = harder
      
 },
+updatePos(state,payload){
+     const Pos = payload.Pos
+     if(Pos == 'Completed'){
+      console.log(Pos)
+      const PosUp = state.task.map(item =>{
+       if(item.nameTask == payload.N){
+             console.log(item)
+             return{
+                   ...item,
+                   position:Pos,
+                   done:true,
+             }
+       }return{...item}
+      })
+      console.log(PosUp)
+      state.filterUser = PosUp
+      state.task = PosUp
+ 
+
+     }
+     else{
+      console.log(Pos)
+      const PosUp = state.task.map(item =>{
+       if(item.nameTask == payload.N){
+             console.log(item)
+             return{
+                   ...item,
+                   position:Pos,
+                   done:false
+             }
+       }return{...item}
+      })
+      console.log(PosUp)
+      state.filterUser = PosUp
+      state.task = PosUp
+     }
+   
+
+}
       
         
         
