@@ -129,7 +129,10 @@ updatePos(state,payload){
      }
    
 
-}
+},
+deleting(state, index) {
+      state.task.splice(index, 1);
+  }
       
         
         

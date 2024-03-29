@@ -95,6 +95,10 @@
                                     <p class="mx-2">-</p>
                                     <p class="mx-2 max-w-xs">{{ task.date }}</p>
                                 </div>
+                                <div class="flex flex-row items-center mt-2">
+                                  <button class="flex block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="deleting(index)"><img src="../assets/delete-Icon.svg" alt=""  class="w-4 mr-1"> Delete</button>
+
+                                </div>
                             </div>
                           </form>
                           
@@ -439,6 +443,9 @@
         deleteTask(i){
           this.delAction[i] = !this.delAction[i];
         },
+        deleting(index) {
+    this.$store.commit('deleting', index);
+},
       addtask(){
         this.des.push('good work using AI');
 
